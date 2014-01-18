@@ -10,18 +10,39 @@
   <body>
   <div id="background"></div>
   <div id="login">
-    <h1>Login</h1>
-    <form method="POST" action="/login">
-      <input type="text" name="email" placeholder="email">
-      <input type="password" name="password" placeholder="password">
-      <button type="submit" name="action" value="login">Login</button>
-      <button type="submit" name="action" value="signup">Signup</button>
-    </form>
+    <h1 class="header">Visit-to-Visit</h1>
+    <div id="fields">
+      <form method="POST" action="/login">
+        <input type="text" id="first_name" name="first_name"></input>
+        <label for="text">First Name</label>
+        <br>
+        <input type="text" id="last_name", name="last_name"></input>
+        <label for="text">Last Name</label>
+        <br>
+        <input type="text" id="email" name="email"></input>
+        <label for="text">Email</label>
+        <br>
+        <input type="password" id="password" name="password"></input>
+        <label for="text">Password</label>
+        <br>
+        <button class="btn btn-lg btn-sample btn-block signin" type="submit" id="signin" value="signin">Sign in</button>
+        <button class="btn btn-lg btn-sample btn-block" type="submit" value="signup" id="signup">Sign up</button>
+      </form>
+    </div>
   </div>
   </body>
 </html>
 <style>
-
+.header {
+  font-size: 100px;
+  margin-top: -90px;
+  margin-bottom: 50px;
+}
+#fields {
+  margin-left: 200px;
+  width: 300px;
+  text-align: left;
+}
 #background {
   position: absolute;
   top: 0;
@@ -37,119 +58,76 @@
 
 #login {
   text-align: center;
-  width: 300px;
-  height: 300px;
+  width: 50%;
+  height: 500px;
   position: absolute;
-  left: 50%;
+  left: 34%;
   top: 50%;
   margin-left: -150px;
   margin-top: -150px;
 }
-
+#signin, #signup {
+  display: inline-block;
+  width:45%;
+}
+#signin {
+  margin-bottom: -5px;
+}
 input {
+  z-index: 1;
+  width: 200px;
   background-color: transparent;
+  border: none;
+  border-bottom: 1px solid;
+}
+.btn-sample {
+  color: #FFFFFF;
+  background-color: #a5a5a5;
+  border-color: #130269;
 }
 
-body {
-  text-align: center;
-  color: #0259A5;
+.btn-sample:hover,
+.btn-sample:focus,
+.btn-sample:active,
+.btn-sample.active,
+.open .dropdown-toggle.btn-sample {
+  color: #FFFFFF;
+  background-color: #a5a5a5;
+  border-color: #130269;
 }
 
-.header {
-  height: 60px;
-  background: #89D1D9;
+.btn-sample:active,
+.btn-sample.active,
+.open .dropdown-toggle.btn-sample {
+  background-image: none;
 }
 
-.header a {
-  float: right;
-  font-size: 20pt;
-  font-style: bold;
-  padding: 15px 10px;
-  text-decoration: none;
-  color: #0259A5;
+.btn-sample.disabled,
+.btn-sample[disabled],
+fieldset[disabled] .btn-sample,
+.btn-sample.disabled:hover,
+.btn-sample[disabled]:hover,
+fieldset[disabled] .btn-sample:hover,
+.btn-sample.disabled:focus,
+.btn-sample[disabled]:focus,
+fieldset[disabled] .btn-sample:focus,
+.btn-sample.disabled:active,
+.btn-sample[disabled]:active,
+fieldset[disabled] .btn-sample:active,
+.btn-sample.disabled.active,
+.btn-sample[disabled].active,
+fieldset[disabled] .btn-sample.active {
+  background-color: #611BBD;
+  border-color: #130269;
 }
 
-.header a#homeButton {
-  float: left;
-  padding: 8px 10px;
-  background: #C8F5F4;
-  font-size: 30pt;
+.btn-sample .badge {
+  color: #611BBD;
+  background-color: #FFFFFF;
 }
-
-.header a#createButton {
-  background: #C1ECEC;
-}
-
-.header a#createButton:hover {
-  background: #ADE6E6;
-}
-
-.header a#meButton {
-  background: #BAE0E0;
-}
-
-.header a#meButton:hover {
-  background: #A7D8D8;
-}
-
-.header a#logoutButton {
-  background: #B3D4D4;
-}
-
-.header a#logoutButton:hover {
-  background: #A0CACA;
-}
-
-.meme {
-  position: relative;
-  padding: 10px;
-}
-
-.memeText {
-  position: absolute;
-  text-align: center;
-  width: 100%;
-  color: white;
-  font-style: bold;
-  text-shadow:
-  -2px -2px 0 #000,
-  2px -2px 0 #000,
-  -2px 2px 0 #000,
-  2px 2px 0 #000;
-}
-
-.memeText h1 {
-  margin: auto;
-}
-
-#topText {
-  top: 15px;
-}
-
-#bottomText {
-  bottom: 15px;
-}
-
-#memeImg {
-}
-
-#create input[type=text] {
-  font-size: 20pt;
-  text-transform: uppercase;
-}
-
-#create #photoDropdown {
-  display: block;
-  margin: auto;
-  margin-top: 10px;
-  color: #0259A5;
-}
-
-#create input {
-  display: block;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
 </style>
+<script>
+$(document).ready(function() {
+
+});
+</script>
