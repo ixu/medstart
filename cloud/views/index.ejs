@@ -39,7 +39,7 @@
       <div style="display:none" class="error"></div>
     </form>
     <script>
-    var Photo = Parse.Object.extend("photo");
+    //var Photo = Parse.Object.extend("photo");
 
     $(function() {
 
@@ -55,6 +55,7 @@
     // This function is called when the user clicks on Upload to Parse. It will create the REST API request to upload this image to Parse.
     $('#uploadbutton').click(function() {
       var name = "photo";
+      /*
       var parseFile = new Parse.File(name, file);
       console.log(parseFile);
       console.log(name);
@@ -68,7 +69,7 @@
         console.log("shit");
       
       });
-
+      */
       var serverUrl = 'https://api.parse.com/1/classes/photo';
 
       $.ajax({
