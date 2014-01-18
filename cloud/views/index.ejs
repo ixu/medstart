@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Snapshots</title>
+    <!--link rel='stylesheet' href='/stylesheets/styles.css' /-->
+    <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <button id="homeButton" href="/">Home</button>
+      <button id="logoutButton" href="/logout">Logout</button>
+      <button id="meButton" href="/me">My Profile</button>
+      <button id="createButton" href="/">Create Snapshot</button>
+    </div>
+    <form id="create" method="POST" action="/snapshot">
+
+      <input type="text" name="otc" placeholder="over-the-counter medications" />
+      <input type="text" name="description" placeholder="description" />
+      <div class="snapshot">
+        <div class="snapshotText" id="otc">
+          <h1></h1>
+        </div>
+        <!-- Set the image src to the photos url for the first photo in the dropdown from routes.js -->
+        <div class="snapshotText" id="description">
+          <h1></h1>
+        </div>
+      </div>
+      <fieldset>
+        <input type="file" name="fileselect" id="fileselect"></input>
+        <input id="uploadbutton" type="button" value="Upload"/>
+      </fieldset>
+      <img id="snapshotImg" src="" value=""/>
+      <div>
+        <button type="submit">Save snapshot</button>
+      </div>
+      <div style="display:none" class="error"></div>
+    </form>
+    <script>
+    var Photo = Parse.Object.extend("photo");
+
+    $(function() {
+
+      var file;
+
+      // Set an event listener on the Choose File field.
+      $('#fileselect').bind("change", function(e) {
+        var files = e.target.files || e.dataTransfer.files;
+        // Our file var now holds the selected file
+        file = files[0];
+      });
+
+    // This function is called when the user clicks on Upload to Parse. It will create the REST API request to upload this image to Parse.
+    $('#uploadbutton').click(function() {
+      var name = "photo";
+      var parseFile = new Parse.File(name, file);
+      console.log(parseFile);
+      console.log(name);
+      var photo = new Photo();
+      photo.set('file', parseFile)
+      photo.save.then(function(photoObj) {
+    // redirect to the meme's page at exports.show below
+      $("#snapshotImg").attr("src", photoObj.get('file').url());
+      $("#snapshotImg").val(photoObj.id);
+      }, function(error) {
+        console.log("shit");
+      
+      });
+
+      var serverUrl = 'https://api.parse.com/1/classes/photo';
+
+      $.ajax({
+        type: "POST",
+        beforeSend: function(request) {
+          request.setRequestHeader("X-Parse-Application-Id", 'lw9IIrB17qvfnJHjSmdZIHp1gQSiTpLJHS9IBUzn');
+          request.setRequestHeader("X-Parse-REST-API-Key", 'ikTbSfaMpIkhMDQXuaTMF4E5VVbP6RH2AImFmqOc');
+          request.setRequestHeader("Content-Type", file.type);
+        },
+        url: serverUrl,
+        data: file,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+          alert("File available at: " + data.url);
+
+          console.log(data);
+        },
+        error: function(data) {
+          var obj = jQuery.parseJSON(data);
+          alert(obj.error);
+        }
+      });
+
+
+
+
+
+
+    });
+
+
+    });
+
+      $("input[type=text]").bind("keyup", function() {
+        var topText = $("input[name=topText]").val().toUpperCase();
+        var bottomText = $("input[name=bottomText]").val().toUpperCase();
+        var topSize;
+        var bottomSize;
+        if (topText.length < 6) {
+          topSize = 55;
+        } else if (topText.length < 12) {
+          topSize = 45;
+        } else {
+          topSize = 35;
+        }
+        if (bottomText.length < 6) {
+          bottomSize = 55;
+        } else if (bottomText.length < 12) {
+          bottomSize = 45;
+        } else {
+          bottomSize = 35;
+        }
+        var topH = $("#topText h1");
+        var bottomH = $("#bottomText h1");
+        topH.text(topText);
+        bottomH.text(bottomText);
+        topH.css({"font-size": topSize+"px"});
+        bottomH.css({"font-size": bottomSize+"px"});
+      });
+    </script>
+  </body>
+</html>

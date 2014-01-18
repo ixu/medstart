@@ -1,0 +1,102 @@
+body {
+  text-align: center;
+  background: #E3F1F2;
+  color: #0259A5;
+}
+
+.header {
+  height: 60px;
+  background: #89D1D9;
+}
+
+.header a {
+  float: right;
+  font-size: 20pt;
+  font-style: bold;
+  padding: 15px 10px;
+  text-decoration: none;
+  color: #0259A5;
+}
+
+.header a#homeButton {
+  float: left;
+  padding: 8px 10px;
+  background: #C8F5F4;
+  font-size: 30pt;
+}
+
+.header a#createButton {
+  background: #C1ECEC;
+}
+
+.header a#createButton:hover {
+  background: #ADE6E6;
+}
+
+.header a#meButton {
+  background: #BAE0E0;
+}
+
+.header a#meButton:hover {
+  background: #A7D8D8;
+}
+
+.header a#logoutButton {
+  background: #B3D4D4;
+}
+
+.header a#logoutButton:hover {
+  background: #A0CACA;
+}
+
+.meme {
+  position: relative;
+  padding: 10px;
+}
+
+.memeText {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  color: white;
+  font-style: bold;
+  text-shadow:
+  -2px -2px 0 #000,
+  2px -2px 0 #000,
+  -2px 2px 0 #000,
+  2px 2px 0 #000;  
+}
+
+.memeText h1 {
+  margin: auto;
+}
+
+#topText {
+  top: 15px;
+}
+
+#bottomText {
+  bottom: 15px;
+}
+
+#memeImg {
+}
+
+#create input[type=text] {
+  font-size: 20pt;
+  text-transform: uppercase;
+}
+
+#create #photoDropdown {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+  color: #0259A5;
+}
+
+#create input {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

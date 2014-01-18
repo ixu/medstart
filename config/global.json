@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "FirstApp": {
+            "applicationId": "lw9IIrB17qvfnJHjSmdZIHp1gQSiTpLJHS9IBUzn", 
+            "masterKey": "PtHj05osdkcdF7IlFknfGE4oI8Poql7vhkTqQ0Cu"
+        }, 
+        "_default": {
+            "link": "FirstApp"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.15"
+    }
+}

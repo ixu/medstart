@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Snapshots</title>
+    <!--link rel='stylesheet' href='/stylesheets/styles.css' /-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <button id="homeButton" href="/">Home</button>
+      <button id="logoutButton" href="/logout">Logout</button>
+      <button id="meButton" href="/me">My Profile</button>
+      <button id="createButton" href="/">Create Snapshot</button>
+    </div>
+    <!-- Display the username of the creator of the meme from routes.js -->
+    <h1>Created by <%= snapshot.get('user').get('username') %></h1>
+    <div class="snapshot">
+      <div class="snapshotText" id="otc">
+        <!-- Set the top text from routes.js -->
+        <h1><%= snapshot.get('otc') %></h1>
+      </div>
+      <!-- Set the image src to the meme's photo's url from routes.js -->
+      <img id="snapshotImg" src="<%= snapshot.get('photo').get('file').url() %>"/>
+      <div class="snapshotText" id="description">
+        <!-- Set the bottom text from routes.js -->
+        <h1><%= snapshot.get('description') %></h1>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+        var topEl = $("#otc h1");
+        var bottomEl = $("#description h1");
+        var topText = topEl.text().toUpperCase();
+        var bottomText = bottomEl.text().toUpperCase();
+        var topSize;
+        var bottomSize;
+        if (topText.length < 6) {
+          topSize = 55;
+        } else if (topText.length < 12) {
+          topSize = 45;
+        } else {
+          topSize = 35;
+        }
+        if (bottomText.length < 6) {
+          bottomSize = 55;
+        } else if (bottomText.length < 12) {
+          bottomSize = 45;
+        } else {
+          bottomSize = 35;
+        }
+        topEl.text(topText);
+        bottomEl.text(bottomText);
+        topEl.css({"font-size": topSize+"px"});
+        bottomEl.css({"font-size": bottomSize+"px"});
+      });
+    </script>
+  </body>
+</html>
