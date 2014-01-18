@@ -10,10 +10,10 @@
   </head>
   <body>
     <div class="header">
-      <button id="homeButton" href="/">Home</button>
-      <button id="logoutButton" href="/logout">Logout</button>
-      <button id="meButton" href="/me">My Profile</button>
-      <button id="createButton" href="/">Create Snapshot</button>
+      <button id="homeButton" onclick="window.location.href='/'">Home</button>
+      <button id="logoutButton" onclick="window.location.href='/logout'">Logout</button>
+      <button id="meButton" onclick="window.location.href='/me'">My Profile</button>
+      <button id="createButton" onclick="window.location.href='/'">Create Snapshot</button>
     </div>
     <!-- Display the username of the creator of the meme from routes.js -->
     <h1>Created by <%= snapshot.get('user').get('username') %></h1>
@@ -23,7 +23,6 @@
         <h1><%= snapshot.get('otc') %></h1>
       </div>
       <!-- Set the image src to the meme's photo's url from routes.js -->
-      <img id="snapshotImg" src="<%= snapshot.get('photo').get('file').url() %>"/>
       <div class="snapshotText" id="description">
         <!-- Set the bottom text from routes.js -->
         <h1><%= snapshot.get('description') %></h1>

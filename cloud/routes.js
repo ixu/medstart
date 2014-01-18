@@ -1,6 +1,7 @@
 // initialize some Parse Object classes so we can use them throughout
 var Photo = Parse.Object.extend("photo");
 var Snapshot = Parse.Object.extend("Snapshot");
+var Appointment = Parse.Object.extend("Appointment");
 // Shows the form to create a new meme
 // get '/'
 exports.index = function(req, res) {
@@ -104,12 +105,36 @@ exports.create = function(req, res) {
   // create a new Meme Parse Object
   var snapshot = new Snapshot();
 
-  snapshot.set('otc', req.body.otc.toUpperCase());
+  snapshot.set('otc', req.body.otc);
 
   // set the 'photo' field to be a pointer to a Photo object by passing a Photo object to set()
   var photo = new Photo();
-  photo.id = req.body.snapshotImg;
-  snapshot.set('photo', photo);
+  console.log(req.body);
+  console.log(req);
+  var parseFile = new Parse.File(req.body.fieldselect.name, req.body.fieldselect);
+  console.log(req.body);
+  //photo.set('file', parseFile);
+  //console.log(photo);
+  
+  parseFile.save().then(function(fileObj) {
+    photo.set('file', fileObj);
+    photo.save().then(function(photoObj) {
+      snapshot.set('photo', photo);
+
+    }, function(error) {
+      console.log("shit");
+    })
+
+  }, function(error) {
+    console.log("shite file");
+  }
+  )
+  /*
+  photo.save().then(function(photoObj) {
+    snapshot.set('photo', photo);
+  }, function(error) {
+    console.log("shit");
+  })*/
 
   // set the 'user' field to be a pointer to the current user
   var user = Parse.User.current();
@@ -141,3 +166,27 @@ exports.show = function(req, res) {
     });
   });
 }
+
+
+exports.appointments = function(req, res) {
+  // get the user objectID from the url parameter :userId
+  var userId = req.params.userId;
+  var query = new Parse.Query(Parse.User);
+  var user;
+  // get the user object for :userId
+  query.get(userId).then(function(userObj) {
+    var query = new Parse.Query(Appointment);
+    query.equalTo("user", userObj);
+    // include the photo field in the query so that it fetches all the content from the Photo object as well
+    user = userObj;
+    return query.find();
+  }).then(function(appointmentObj) {
+    // pass the meme objects to profile.ejs
+    res.render('appointments', {
+      user: user,
+      appointments: appointmentObjs
+    });
+  });
+};
+
+

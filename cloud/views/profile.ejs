@@ -10,10 +10,10 @@
   </head>
   <body>
     <div class="header">
-      <button id="homeButton" href="/">Home</button>
-      <button id="logoutButton" href="/logout">Logout</button>
-      <button id="meButton" href="/me">My Profile</button>
-      <button id="createButton" href="/">Create Snapshot</button>
+      <button id="homeButton" onclick="window.location.href='/'">Home</button>
+      <button id="logoutButton" onclick="window.location.href='/logout'">Logout</button>
+      <button id="meButton" onclick="window.location.href='/me'">My Profile</button>
+      <button id="createButton" onclick="window.location.href='/'">Create Snapshot</button>
     </div>
     <!-- Display the username of the profile owner from routes.js -->
     <h1><%= user.get('username') %>'s Profile</h1>
