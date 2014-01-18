@@ -14,7 +14,7 @@ Parse.Cloud.beforeSave("Meme", function(request, response) {
   memeObj.set("bottom", bottomTextCaps);
   response.success();
 });
- 
+
 // Increment the "numMemes" counter for the user who created the meme
 Parse.Cloud.afterSave("Meme", function(request) {
   // Only increment the user's numMemes if this Meme object is new

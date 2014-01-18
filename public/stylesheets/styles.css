@@ -1,5 +1,6 @@
 body {
   text-align: center;
+  background-image: url('images/doctoroffice.jpg');
   background: #E3F1F2;
   color: #0259A5;
 }
@@ -64,7 +65,7 @@ body {
   -2px -2px 0 #000,
   2px -2px 0 #000,
   -2px 2px 0 #000,
-  2px 2px 0 #000;  
+  2px 2px 0 #000;
 }
 
 .memeText h1 {
