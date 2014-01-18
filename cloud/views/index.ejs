@@ -2,47 +2,70 @@
 <html>
   <head>
     <title>Snapshots</title>
-    <!--link rel='stylesheet' href='/stylesheets/styles.css' /-->
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.2.15.min.js"></script>
-    
+
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <div class="header">
-      <button id="homeButton" onclick="window.location.href='/'">Home</button>
-      <button id="logoutButton" onclick="window.location.href='/logout'">Logout</button>
-      <button id="meButton" onclick="window.location.href='/me'">My Profile</button>
-      <button id="createButton" onclick="window.location.href='/'">Create Snapshot</button>
-    </div>
-    <form id="create" method="POST" action="/snapshot" enctype="multipart/form-data">
+    <div id="wrap">
 
-      <input type="text" name="otc" placeholder="over-the-counter medications" />
-      <input type="text" name="description" placeholder="description" />
-      <div class="snapshot">
-        <div class="snapshotText" id="otc">
-          <h1></h1>
-        </div>
-        <!-- Set the image src to the photos url for the first photo in the dropdown from routes.js -->
-        <div class="snapshotText" id="description">
-          <h1></h1>
+      <!-- Fixed navbar -->
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Visit-to-Visit</a>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="#">Home</a></li>
+              <li><a href="/logout">Logout</a></li>
+              <li class="active"><a href="#about">Create Snapshot</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!--/.nav-collapse -->
         </div>
       </div>
-      <fieldset>
-        <input type="file" name="fileselect" id="fileselect"></input>
-        <input id="uploadbutton" type="button" value="Upload"/>
-      </fieldset>
-      <img id="snapshotImg" src="" value=""/>
-      <div>
-        <button type="submit">Save snapshot</button>
-      </div>
-      <div style="display:none" class="error"></div>
-    </form>
-    <script>
-    var Photo = Parse.Object.extend("photo");
 
+      <!-- Begin page content -->
+      <div class="container">
+        <div class="page-header" style="margin-top: 100px;">
+          <h1>Create a new snapshot</h1>
+        </div>
+        <button id="addPhoto" class="btn btn-med btn-success" href="#" role="button">Add photo</button>
+        <button id="addOTC" class="btn btn-med btn-success" href="#" role="button">Add OTC</button>
+        <form id="create" method="POST" action="/snapshot">
+          <div id="snapshot_form">
+          </div>
+          <button class="btn btn-lg btn-primary" href="#" role="button">Save snapshot</button>
+        </form>
+      </div>
+
+    </body>
+<script>
+  $(document).ready(function() {
+    $('#addOTC').click(function() {
+      $('#snapshot_form').append('<input type="text" name="otc[]" placeholder="OTC Name" /><textarea type="text" name="description[]" placeholder="description/side-effects"></textarea><br><hr>');
+    });
+    $('#addPhoto').click(function() {
+      $('#snapshot_form').append('<input type="file" name="image[]" id="fileselect"></input><input type="text" placeholder="Image description" name="image_description[]" /><br><hr>');
+    });
+    /*
+
+    */
+  });
     $(function() {
 
       var file;
@@ -80,6 +103,7 @@
       
       var serverUrl = 'https://api.parse.com/1/files/' + file.name;
       /*
+
       $.ajax({
         type: "POST",
         beforeSend: function(request) {
@@ -99,20 +123,14 @@
         error: function(data) {
           var obj = jQuery.parseJSON(data);
           alert(obj.error);
-        }
-        
-      });*/
+        }*/
 
-
-
-
-
-
+      });
     });
-
-
-    });
-
-    </script>
-  </body>
+</script>
+<style>
+#snapshot_form {
+  margin-top: 20px;
+}
+</style>
 </html>

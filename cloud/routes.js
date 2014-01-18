@@ -41,17 +41,20 @@ exports.loginOrSignup = function(req, res) {
     user.signUp().then(function(userObj) {
       res.redirect('/');
     }, function(error) {
-      res.send("Error: " + error.code + " " + error.message);
+      res.render('login', {});
+      //res.send("Error: " + error.code + " " + error.message);
     });
   } else if (req.body.action == "login") {
     // Login the user and redirect them to the main page if successful
     Parse.User.logIn(req.body.email, req.body.password).then(function(userObj) {
       res.redirect('/');
     }, function(error) {
-      res.send("Error: " + error.code + " " + error.message);
+      res.render('login', {});
+      //res.send("Error: " + error.code + " " + error.message);
     });
   } else {
-    res.send("Error, login or signup not specified");
+    res.render('login', {});
+    //res.send("Error, login or signup not specified");
   }
 };
 
