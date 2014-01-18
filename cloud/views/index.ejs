@@ -44,6 +44,8 @@
         </div>
         <button id="addPhoto" class="btn btn-med btn-success" href="#" role="button">Add photo</button>
         <button id="addOTC" class="btn btn-med btn-success" href="#" role="button">Add OTC</button>
+        <button id="addWeight" class="btn btn-med btn-success" href="#" role="button">Add Weight reading</button>
+        <button id="addACL" class="btn btn-med btn-success" href="#" role="button">Add Glucose reading</button>
         <form id="create" method="POST" action="/snapshot">
           <div id="snapshot_form">
           </div>
@@ -54,10 +56,10 @@
 <script>
   $(document).ready(function() {
     $('#addOTC').click(function() {
-      $('#snapshot_form').append('<input type="text" name="otc[]" placeholder="OTC Name" /><textarea type="text" name="description[]" placeholder="description/side-effects"></textarea><br><hr>');
+      $('#snapshot_form').append('<input type="text" name="otc[]" placeholder="OTC Name" /><input type="text" placeholder="Dosage/Pill" name="dosage[]" /><input type="text" placeholder="Doses Taken" name="doses[]" /><input type="text" placeholder="Date taken" name="date[]" /><input type="text" placeholder="Reason" name="reason[]" /><br><hr>');
     });
     $('#addPhoto').click(function() {
-      $('#snapshot_form').append('<input type="file" name="image[]" id="fileselect"></input><input type="text" placeholder="Image description" name="image_description[]" /><br><hr>');
+      $('#snapshot_form').append('<input type="file" name="image[]"/><br><input type="text" name="description[]" placeholder="description" /><br><hr>');
     });
     /*
 
