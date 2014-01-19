@@ -9,9 +9,7 @@
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
   </head>
   <body style="">
-
       <div class="container">
-
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -40,30 +38,21 @@
         </div>
 
         <!-- Jumbotron -->
+
         <div class="jumbotron" id="jumbo">
           <h1>Bruno Faviero</h1>
           <p class="lead">Hello</p>
           <p><a class="btn btn-lg btn-success" href="#" role="button">Create a new snapshot</a></p>
         </div>
 
-        <!-- Example row of columns -->
-        <div class="row">
-          <div class="col-lg-4">
-            <h2>Your FitBit data</h2>
-            <p>Something about your FitBit here</p>
-            <p><a class="btn btn-primary" href="#" role="button">View details</a></p>
-          </div>
-          <div class="col-lg-4">
-            <h2>Heading</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn btn-primary" href="#" role="button">View details</a></p>
-         </div>
-          <div class="col-lg-4">
-            <h2>Heading</h2>
-            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-            <p><a class="btn btn-primary" href="#" role="button">View details</a></p>
-          </div>
+        <div id="upcoming_list">
+          <ul class="list-group">
+            <li class="list-group-item alert alert-success">Upcoming Appointments:</li>
+            <li class="list-group-item alert alert-warning">1/18, Dr. Bruno</li>
+            <li class="list-group-item alert alert-warning">2/2, Dr. Iris</li>
+          </ul>
         </div>
+
         <div class="panel panel-default">
         <a data-toggle="collapse" data-parent="#accordion" href="#past">
           <div class="panel-heading" class="panel_heading">
@@ -91,6 +80,26 @@
             </div>
           </div>
         </div>
+        <!-- Example row of columns -->
+        <div class="row">
+          <div class="col-lg-4">
+            <h2>Your FitBit data</h2>
+            <p>Something about your FitBit here</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details</a></p>
+          </div>
+          <div class="col-lg-4">
+            <h2>Heading</h2>
+            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+            <p><a class="btn btn-primary" href="#" role="button">View details</a></p>
+         </div>
+          <div class="col-lg-4">
+            <h2>Heading</h2>
+            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details</a></p>
+          </div>
+        </div>
+
+
         <!-- Site footer -->
         <div class="footer">
           <p>© Company 2013</p>
@@ -106,6 +115,11 @@
 
   </body>
   <style>
+  #upcoming_list {
+    position: fixed;
+    top: 50px;
+    left: 10px;
+  }
   .panel_heading {
     background-color: #CBCBCB;
     border-color: black;
