@@ -109,6 +109,7 @@ exports.create = function(req, res) {
   var snapshot = new Snapshot();
 
   snapshot.set('otc', req.body.otc);
+  snapshot.set('description', req.body.description);
 
   // set the 'photo' field to be a pointer to a Photo object by passing a Photo object to set()
   var photo = new Photo();
@@ -118,7 +119,7 @@ exports.create = function(req, res) {
   console.log(req.body);
   //photo.set('file', parseFile);
   //console.log(photo);
-  
+  /*
   parseFile.save().then(function(fileObj) {
     photo.set('file', fileObj);
     photo.save().then(function(photoObj) {
@@ -131,7 +132,7 @@ exports.create = function(req, res) {
   }, function(error) {
     console.log("shite file");
   }
-  )
+  )*/
   /*
   photo.save().then(function(photoObj) {
     snapshot.set('photo', photo);
@@ -184,6 +185,7 @@ exports.appointments = function(req, res) {
     user = userObj;
     return query.find();
   }).then(function(appointmentObj) {
+    console.log("hooray");
     // pass the meme objects to profile.ejs
     res.render('appointments', {
       user: user,

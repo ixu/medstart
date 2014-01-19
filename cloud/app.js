@@ -27,6 +27,6 @@ app.post('/snapshot', routes.create);
 app.get('/snapshot/:objectId', routes.show);
 app.get('/profile/:userId', routes.profile);
 app.get('/me', routes.me);
-
+app.get('/appointments', routes.appointments);
 // Attach the Express app to Cloud Code.
 app.listen();
