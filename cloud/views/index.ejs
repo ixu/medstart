@@ -3,9 +3,13 @@
   <head>
     <title>Snapshots</title>
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="/js/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
   </head>
   <body>
     <div id="wrap">
@@ -14,25 +18,22 @@
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Visit-to-Visit</a>
+            <a class="navbar-brand" href="/me">Visit-to-Visit</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li><a href="#">Home</a></li>
-              <li><a href="/logout">Logout</a></li>
-              <li class="active"><a href="#about">Create Snapshot</a></li>
-              <li><a href="/appointments">Appointments</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="/me">Home</a></li>
+              <li><a data-toggle="modal" data-target="#addDoctorModal" role="button" href="#">Add a new appointment</a></li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
+                  <li class="active"><a href="/">Create Snapshot</a></li>
+                  <li><a href="/summary">Summary</a></li>
+                  <li><a href="/logout">Logout</a></li>
                   <li class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
+                  <li class="dropdown-header">Data</li>
+                  <li><a href="#">Sync Data</a></li>
+                  <li><a href="#">Edit Data</a></li>
                 </ul>
               </li>
             </ul>
@@ -47,93 +48,149 @@
         </div>
         <button id="addPhoto" class="btn btn-med btn-success" href="#" role="button">Add photo</button>
         <button id="addOTC" class="btn btn-med btn-success" href="#" role="button">Add OTC</button>
-        <button id="addWeight" class="btn btn-med btn-success" href="#" role="button">Add Weight reading</button>
-        <button id="addACL" class="btn btn-med btn-success" href="#" role="button">Add Glucose reading</button>
+        <!--button id="addWeight" class="btn btn-med btn-success" href="#" role="button">Add Weight reading</button-->
+        <!--button id="addACL" class="btn btn-med btn-success" href="#" role="button">Add Glucose reading</button-->
         <form id="create" method="POST" action="/snapshot">
           <div id="snapshot_form">
+
+            <input type="text" name="weight" placeholder="Weight" />
+            <input type="text" placeholder="Glucose reading" name="glucose" /><br><hr>
+            <input type="text" name="description" placeholder="description" /><br><hr>
+            <input name="snapshotImg" id="snapshotImg" style="display:none"/><br><hr>
+            <input type="image" name="imgDisplay" id="imgDisplay" style="visibility:hidden" height="50"/><br><hr>
           </div>
-          <button class="btn btn-lg btn-primary" href="#" role="button">Save snapshot</button>
+          <button type="submit" id="savesnapshot"class="btn btn-lg btn-primary" href="#" role="button">Save snapshot</button>
         </form>
       </div>
 
-    </body>
+      <!-- End page content -->
+
+      <!-- Appointment modal -->
+      <div class="modal fade" id="addDoctorModal" tabindex="-1" role="dialog" aria-labelledby="Add Doctor" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="addDoctorHeader">Add Doctor</h4>
+            </div>
+            <div class="modal-body">
+              <form id="modal-form" accept-charset="UTF-8" action="/appointments" data-remote="true" method="post">
+                <input id="appointment_date" name="date" type="text" placeholder="Appointment Date" />
+                <input type="text" name="doctor" placeholder="Dr. Name" />
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <a id="modal-form-submit" class='btn btn-primary' href="#">Submit</a>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+  <!-- End appointment modal-->
+
+
+        <div id="upcoming_list">
+          <ul class="list-group">
+            <li class="list-group-item alert alert-success">Upcoming Appointments:</li>
+            <% appointments.forEach(function(appointment) { %>
+            <li class="list-group-item alert alert-warning"><%=appointment.get('date')%>, <%=appointment.get('doctor')%></li>
+            <%});%>
+          </ul>
+        </div>   
+    </div>
+  </body>
 <script>
+  var parseFile;
   $(document).ready(function() {
+    Parse.initialize('lw9IIrB17qvfnJHjSmdZIHp1gQSiTpLJHS9IBUzn', 'QTsAR35F5BofOQmdlzNhwSu9JKdKp7PySILgZagE');
+    var Photo = Parse.Object.extend("photo");
+    var photos;
+    
+
+
+
+    // This function is called when the user clicks on Upload to Parse. It will create the REST API request to upload this image to Parse.
+    /*
+    $('#savesnapshot').click(function() {
+      photos.forEach(function(file) {
+        var parseFile = new ParseFile(file.name, file);
+        parseFile.save().then(function(fileObj) {
+          $("#snapshotImg").attr("src", fileObj.url());
+          $("#snapshotImg").val(fileObj.url());
+
+        }, function(error) {
+          console.log('could not save file');
+        })
+      })
+    });*/
+    $('#modal-form-submit').on('click', function(e){
+      // We don't want this to act as a link so cancel the link action
+      e.preventDefault();
+
+      // Find form and submit it
+      $('#modal-form').submit();
+    });
     $('#addOTC').click(function() {
       $('#snapshot_form').append('<input type="text" name="otc[]" placeholder="OTC Name" /><input type="text" placeholder="Dosage/Pill" name="dosage[]" /><input type="text" placeholder="Doses Taken" name="doses[]" /><input type="text" placeholder="Date taken" name="date[]" /><input type="text" placeholder="Reason" name="reason[]" /><br><hr>');
     });
     $('#addPhoto').click(function() {
-      $('#snapshot_form').append('<input type="file" name="image[]"/><br><input type="text" name="description[]" placeholder="description" /><br><hr>');
-    });
-    /*
-
-    */
-  });
-    $(function() {
-
-      var file;
-
-      // Set an event listener on the Choose File field.
-      $('#fileselect').bind("change", function(e) {
+      $('#snapshot_form').append('<input type="file" class="fileselect" name="image[]" accept="image/*"/><br><input type="text" name="photodescription[]" placeholder="photodescription" /><br><hr>');
+      $('.fileselect').bind("change", function(e) {
         var files = e.target.files || e.dataTransfer.files;
-        // Our file var now holds the selected file
-        file = files[0];
-        console.log(file);
-      });
+        var file = files[0];
+        parseFile = new Parse.File(file.name, file);
+        parseFile.save().then(function(fileObj) {
+          console.log(fileObj);
+          $("#imgDisplay").attr("src", fileObj.url());
+          $("#snapshotImg").val(fileObj.url());
+          $("#imgDisplay").attr("style", "visibility:visible");
+        });
+        
 
-    // This function is called when the user clicks on Upload to Parse. It will create the REST API request to upload this image to Parse.
-    $('#uploadbutton').click(function() {
-      var name = "photo";
-      
-      var parseFile = new Parse.File("photo.png", file);
-      parseFile.save().then(function(fileObj) {
 
-      }, function(error) {
-        console.log('could not save file');
-      })
-      /*
-      var photo = new Photo();
-      photo.set('file', parseFile)
-      photo.save.then(function(photoObj) {
-    // redirect to the meme's page at exports.show below
-        $("#snapshotImg").attr("src", photoObj.get('file').url());
-        $("#snapshotImg").val(photoObj.id);
-      }, function(error) {
-        console.log("shit");
-      
-      });*/
-      
-      
-      var serverUrl = 'https://api.parse.com/1/files/' + file.name;
-      /*
+        /*
+        parseFile.save().then(function(fileObj) {
+          var photo = new Photo();
+          photo.set('file', fileObj);
+          photo.save().then(function(photoObj) {
+            $("#snapshotImg").attr("src", photoObj.get('file').url());
+            $("#snapshotImg").val(photoObj.id);
+          }, function(error) {
+            console.log("FUCK");
+          })
+        }, function(error) {
+          console.log('could not save file');
+        })
 
-      $.ajax({
-        type: "POST",
-        beforeSend: function(request) {
-          request.setRequestHeader("X-Parse-Application-Id", 'lw9IIrB17qvfnJHjSmdZIHp1gQSiTpLJHS9IBUzn');
-          request.setRequestHeader("X-Parse-REST-API-Key", 'ikTbSfaMpIkhMDQXuaTMF4E5VVbP6RH2AImFmqOc');
-          request.setRequestHeader("Content-Type", file.type);
-        },
-        url: serverUrl,
-        data: file,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-          alert("File available at: " + data.url);
-          $("#snapshotImg").attr("src", data.url);
-          console.log(data);
-        },
-        error: function(data) {
-          var obj = jQuery.parseJSON(data);
-          alert(obj.error);
-        }*/
+        photos = $('.fileselect').map(function() {
+          var files = e.target.files || e.dataTransfer.files;
+          console.log(files);
+          console.log(this);
+          return files;
+        })*/
 
       });
     });
+
+  });
+
 </script>
 <style>
 #snapshot_form {
   margin-top: 20px;
+}
+#upcoming_list {
+  position: fixed;
+  top: 50px;
+  right: 10px;
+}
+.panel_heading {
+  background-color: #CBCBCB;
+  border-color: black;
+  border-radius: 5px;
+}
+#jumbo {
+  width: 100% !important;
 }
 </style>
 </html>

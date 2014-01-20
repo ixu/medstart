@@ -9,7 +9,10 @@ var parseExpressCookieSession = require('parse-express-cookie-session');
 // initializes express
 var app = express();
 
+var path = require('path');
+
 // Global app configuration section
+//app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', 'cloud/views');  // Specify the folder to find templates
 app.set('view engine', 'ejs');    // Set the template engine
 app.use(parseExpressHttpsRedirect());  // Require user to be on HTTPS.
@@ -24,9 +27,11 @@ app.get('/login', routes.showLogin);
 app.post('/login', routes.loginOrSignup);
 app.get('/logout', routes.logout);
 app.post('/snapshot', routes.create);
-app.get('/snapshot/:objectId', routes.show);
+//app.get('/snapshot/:objectId', routes.show);
 app.get('/profile/:userId', routes.profile);
 app.get('/me', routes.me);
-app.get('/appointments', routes.appointments);
+app.post('/appointments', routes.appointments);
+app.post('/bb', routes.bb);
+app.get('/summary', routes.summary);
 // Attach the Express app to Cloud Code.
 app.listen();

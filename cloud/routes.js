@@ -2,6 +2,7 @@
 var Photo = Parse.Object.extend("photo");
 var Snapshot = Parse.Object.extend("Snapshot");
 var Appointment = Parse.Object.extend("Appointment");
+var UserInfo = Parse.Object.extend("UserInfo");
 // Shows the form to create a new meme
 // get '/'
 exports.index = function(req, res) {
@@ -9,13 +10,22 @@ exports.index = function(req, res) {
   if (!Parse.User.current()) {
     res.redirect('/login');
   }
+  var appointmentQuery = new Parse.Query(Appointment);
+  var user = Parse.User.current();
+  appointmentQuery.equalTo('user', user);
+  var appointmentObjs;
+  appointmentQuery.find().then(function(a){
+    appointmentObjs = a;
+  });
   // Query the Photo objects to populate the dropdown
   var query = new Parse.Query(Photo);
   query.descending('name');
   query.find().then(function(photoObjs) {
     // pass the photos objects to index.ejs
     res.render('index', {
-      photos: photoObjs
+      photos: photoObjs,
+      userId: Parse.User.current().id,
+      appointments: appointmentObjs
     });
   });
 };
@@ -70,9 +80,14 @@ exports.logout = function(req, res) {
 exports.profile = function(req, res) {
   // get the user objectID from the url parameter :userId
   var userId = req.params.userId;
+  var user = Parse.User.current();
   var query = new Parse.Query(Parse.User);
-  var user;
-  // get the user object for :userId
+  var appointmentQuery = new Parse.Query(Appointment);
+  appointmentQuery.equalTo('user', user);
+  var appointmentObjs;
+  appointmentQuery.find().then(function(a){
+    appointmentObjs = a;
+  });
   query.get(userId).then(function(userObj) {
     var query = new Parse.Query(Snapshot);
     query.equalTo("user", userObj);
@@ -81,11 +96,18 @@ exports.profile = function(req, res) {
     user = userObj;
     return query.find();
   }).then(function(snapshotObjs) {
+    var userInfoQuery = new Parse.Query(UserInfo);
+    userInfoQuery.equalTo("user", user);
     // pass the meme objects to profile.ejs
-    res.render('profile', {
-      user: user,
-      snapshots: snapshotObjs
-    });
+    userInfoQuery.first().then(function (userInfoObj) {
+      res.render('profile', {
+        user: user,
+        snapshots: snapshotObjs,
+        userInfo: userInfoObj,
+        appointments: appointmentObjs
+      });
+    })
+    
   });
 };
 
@@ -110,35 +132,11 @@ exports.create = function(req, res) {
 
   snapshot.set('otc', req.body.otc);
   snapshot.set('description', req.body.description);
+  snapshot.set('weight', req.body.weight);
+  snapshot.set('glucose', req.body.glucose);
+  snapshot.set('photos', req.body.photos);
+  snapshot.set('url', req.body.snapshotImg);
 
-  // set the 'photo' field to be a pointer to a Photo object by passing a Photo object to set()
-  var photo = new Photo();
-  console.log(req.body);
-  console.log(req);
-  var parseFile = new Parse.File(req.body.fieldselect.name, req.body.fieldselect);
-  console.log(req.body);
-  //photo.set('file', parseFile);
-  //console.log(photo);
-  /*
-  parseFile.save().then(function(fileObj) {
-    photo.set('file', fileObj);
-    photo.save().then(function(photoObj) {
-      snapshot.set('photo', photo);
-
-    }, function(error) {
-      console.log("shit");
-    })
-
-  }, function(error) {
-    console.log("shite file");
-  }
-  )*/
-  /*
-  photo.save().then(function(photoObj) {
-    snapshot.set('photo', photo);
-  }, function(error) {
-    console.log("shit");
-  })*/
 
   // set the 'user' field to be a pointer to the current user
   var user = Parse.User.current();
@@ -146,7 +144,7 @@ exports.create = function(req, res) {
 
   snapshot.save().then(function(snapshotObj) {
     // redirect to the meme's page at exports.show below
-    res.redirect("/snapshot/" + snapshotObj.id);
+    res.redirect("/me");
   }, function(error) {
     res.send(error.message);
   });
@@ -174,24 +172,51 @@ exports.show = function(req, res) {
 
 exports.appointments = function(req, res) {
   // get the user objectID from the url parameter :userId
-  var userId = req.params.userId;
-  var query = new Parse.Query(Parse.User);
-  var user;
-  // get the user object for :userId
-  query.get(userId).then(function(userObj) {
-    var query = new Parse.Query(Appointment);
-    query.equalTo("user", userObj);
-    // include the photo field in the query so that it fetches all the content from the Photo object as well
-    user = userObj;
-    return query.find();
-  }).then(function(appointmentObj) {
-    console.log("hooray");
-    // pass the meme objects to profile.ejs
-    res.render('appointments', {
-      user: user,
-      appointments: appointmentObjs
-    });
+  var user = Parse.User.current();
+  var appointment = new Appointment();
+  appointment.set('user', user);
+  appointment.set('date', req.body.date);
+  appointment.set('doctor', req.body.doctor);
+  appointment.save().then(function(appointmentObj) {
+    res.redirect('/me');
   });
 };
 
+exports.summary = function(req, res) {
+  var user = Parse.User.current();
+  var appointmentQuery = new Parse.Query(Appointment);
+  appointmentQuery.equalTo('user', user);
+  var appointmentObjs;
+  appointmentQuery.find().then(function(a){
+    appointmentObjs = a;
+  });
+  console.log(appointmentObjs);
+  var snapshotQuery = new Parse.Query(Snapshot);
+  snapshotQuery.equalTo("user", user);
+  snapshotQuery.find().then(function(snapshotObjs) {
+    res.render("summary",{
+      user: user,
+      snapshots: snapshotObjs,
+      appointments: appointmentObjs
+    });
+  })
+  
+}
+
+exports.bb = function(req, res) {
+  var user = Parse.User.current();
+
+  var userInfo = new UserInfo();
+  userInfo.set('user', user);
+  userInfo.set('gender', req.body.gender);
+  userInfo.set('dob', req.body.dob);
+  userInfo.save();
+
+  var snapshotQuery = new Parse.Query(Snapshot);
+  snapshotQuery.equalTo("user", user);
+  snapshotQuery.find().then(function(snapshotObjs) {
+    res.redirect("/me");
+  })
+  
+}
 
